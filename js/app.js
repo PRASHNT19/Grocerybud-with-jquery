@@ -1,43 +1,29 @@
+var items = groceryItems;
+function render() {
+  var $app = $("#app");
+  $app.empty();
+
+  var $itemsElement = createItems(items);
+  $app.append($itemsElement);
+}
 $(document).ready(function () {
-  // Grocery items array
-  const groceryItems = [
-    { id: "1", name: "milk", completed: true },
-    { id: "2", name: "bread", completed: true },
-    { id: "3", name: "eggs", completed: false },
-    { id: "4", name: "butter", completed: false },
-  ];
-
-  // Render items dynamically
-  function renderItems(items) {
-    const $app = $("#app");
-    $app.empty();
-
-    const $container = $("<div>").addClass("items");
-
-    items.forEach((item) => {
-      const $item = $("<div>").addClass("single-item");
-
-      const $checkbox = $("<input>")
-        .attr("type", "checkbox")
-        .prop("checked", item.completed);
-
-      const $name = $("<p>")
-        .text(item.name)
-        .css("text-decoration", item.completed ? "line-through" : "none");
-
-      const $editBtn = $("<button>").addClass("btn edit-btn").text("Edit");
-
-      const $removeBtn = $("<button>")
-        .addClass("btn remove-btn")
-        .text("Remove");
-
-      $item.append($checkbox, $name, $editBtn, $removeBtn);
-      $container.append($item);
-    });
-
-    $app.append($container);
-  }
-
-  // Initial render
-  renderItems(groceryItems);
+  render();
 });
+function editCompleted(itemId) {
+  items = $.map(items, function (item) {
+    if (item.id === itemId) {
+      return $.extend({}, item, { completed: !item.completed });
+    }
+    return item;
+  });
+  render();
+}
+function removeItem(itemId) {
+  items = $.grep(items, function (item) {
+    return item.id !== itemId;
+  });
+  render();
+  setTimeout(function () {
+    alert("Item Deleted Successfully!");
+  }, 0);
+}
